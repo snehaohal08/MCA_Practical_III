@@ -1,3 +1,6 @@
+// Create a component that conditionally renders content using
+// ternary operator and JSX.
+
 import React, { useState } from "react";
 
 const Q12 = () => {
