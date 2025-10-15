@@ -1,0 +1,83 @@
+1. Insert at least 5 employee records with nested documents for address (street, city, zip) and update the salary of
+employees living in a specific city (e.g., "Pune") by increasing it by 15%.
+2. Find employees whose salary is within the 2nd and 3rd highest salary range using aggregation stages: $group, $sort,
+$skip, $limit.
+3. Use aggregation pipeline to display each department’s total salary expense and average salary, sorted by total
+expense in descending order.
+4. Replace the name "Sneha" with "Riya" only for employees in the HR department using an update query.
+5. Find employees whose email domain is "example.com" and salary is greater than the average salary of all
+employees using aggregation and comparison operators.
+
+
+1)db.employee.insertMany([
+  {
+    name: "Sneha",
+    department: "HR",
+    email: "sneha@example.com",
+    salary: 50000,
+    address: { street: "MG Road", city: "Pune", zip: 411001 }
+  },
+  {
+    name: "Mosin",
+    department: "IT",
+    email: "mosin@example.com",
+    salary: 70000,
+    address: { street: "Baner", city: "Pune", zip: 411045 }
+  },
+  {
+    name: "Akshata",
+    department: "Finance",
+    email: "akshata@gmail.com",
+    salary: 80000,
+    address: { street: "Laxmi Road", city: "Mumbai", zip: 400001 }
+  },
+  {
+    name: "Rahul",
+    department: "Sales",
+    email: "rahul@gmail.com",
+    salary: 60000,
+    address: { street: "Kharadi", city: "Pune", zip: 411014 }
+  },
+  {
+    name: "Rohit",
+    department: "IT",
+    email: "rohit@example.com",
+    salary: 80000,
+    address: { street: "FC Road", city: "Delhi", zip: 110001 }
+  },
+  
+])
+
+2) db.employee.aggregate([
+  { $sort: { salary: -1 } },
+  {
+    $group: {
+      _id: null,
+      allEmployees: { $push: "$$ROOT" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      topEmployees: { $slice: ["$allEmployees", 1, 2] } 
+    }
+  },
+  { $unwind: "$topEmployees" },
+  { $replaceRoot: { newRoot: "$topEmployees" } }
+])
+
+3)db.employee.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      totalSalary: { $sum: "$salary" },
+      averageSalary: { $avg: "$salary" }
+    }
+  },
+  { $sort: { totalSalary: -1 } }
+])
+
+4)db.employee.updateMany(
+  { name: "Sneha", department: "HR" },
+  { $set: { name: "Riya" } }
+)

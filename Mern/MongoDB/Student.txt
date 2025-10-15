@@ -1,0 +1,18 @@
+1. Create a MongoDB collection named student with fields: rollNo,
+name, specialization, and percentage.
+2. Insert at least 10 records into the student collection.
+3. Find all students whose specialization is "software".
+4. Display student details in descending order of percentage.
+5. Display student details who have percentage below 50%.
+6. Replace all negative percentages with 0.
+7. Demonstrate aggregation operations: ($project, $limit, $filter)
+
+Q1)db.student.insertMany([{Rno:1,name:"sneha", specialization:"software",per:80},{ Rno: 2, name: "mosin", specialization: "hardware", per: 85 },{ Rno: 3, name: "Rohit", specialization: "Tester", per: 75 },{ Rno: 4, name:"Hrushi", specialization: "hardware", per: 95 },{ Rno: 5, name: "Riya", specialization: "software", per: 45 },{ Rno: 6, name: "ankita", specialization: "software", per: 49 },{ Rno: 7, name: "Ashish", specialization: "hardware", per: 65 },{ rollNo: 8, name: "Nina", specialization: "software", per: 48 },{ Rno: 9, name: "Raj", specialization: "software", per: 65 },{ rollNo: 10, name: "Akshata", specialization: "Tester", per: 85 },])
+
+Q2)
+db.student.find({
+specialization:"software"})
+
+Q3)db.student.find().sort({per:-1})
+
+Q4)db.student.find({per:{$lt:50}})
