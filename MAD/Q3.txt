@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <ToggleButton
+        android:id="@+id/toggleMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="Light Mode"
+        android:textOn="Dark Mode"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello! Toggle Dark/Light Mode"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
+
+package com.example.journal_q1;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    LinearLayout mainLayout;
+    ToggleButton toggleMode;
+    TextView tvInfo;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mainLayout = findViewById(R.id.mainLayout);
+        toggleMode = findViewById(R.id.toggleMode);
+        tvInfo = findViewById(R.id.tvInfo);
+
+        toggleMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Dark Mode
+                mainLayout.setBackgroundColor(Color.parseColor("#121212"));
+                tvInfo.setTextColor(Color.WHITE);
+            } else {
+                // Light Mode
+                mainLayout.setBackgroundColor(Color.WHITE);
+                tvInfo.setTextColor(Color.BLACK);
+            }
+        });
+    }
+}

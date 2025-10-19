@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F5F5F5">
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reservation App"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:id="@+id/etDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Select Date and Time"
+        android:textSize="18sp"
+        android:gravity="center_vertical|start"
+        android:padding="10dp"
+        android:focusable="false"
+        android:background="@android:drawable/edit_text"/>
+
+    <Button
+        android:id="@+id/btnSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date and Time"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#FFEB3B"
+        android:textColor="#000"
+        android:textSize="18sp"/>
+</LinearLayout>
+
+package com.example.journal_q1;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etDateTime;
+    Button btnSelect;
+
+    int selectedYear, selectedMonth, selectedDay;
+    int selectedHour, selectedMinute;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etDateTime = findViewById(R.id.etDateTime);
+        btnSelect = findViewById(R.id.btnSelect);
+
+        btnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+    }
+
+    private void showDatePicker() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        selectedYear = year;
+                        selectedMonth = month + 1; // month starts from 0
+                        selectedDay = dayOfMonth;
+                        showTimePicker();
+                    }
+                }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
+    private void showTimePicker() {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        selectedHour = hourOfDay;
+                        selectedMinute = minute;
+
+                        // Format and display in EditText
+                        String formattedTime = String.format("%02d-%02d-%04d %02d:%02d",
+                                selectedDay, selectedMonth, selectedYear, selectedHour, selectedMinute);
+                        etDateTime.setText(formattedTime);
+                    }
+                }, hour, minute, true); // true = 24-hour format
+
+        timePickerDialog.show();
+    }
+}

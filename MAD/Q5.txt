@@ -1,0 +1,141 @@
+AndroidMainfast:
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Journal_q1">
+
+        <!-- First Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Second Activity -->
+        <activity
+            android:name=".Second_main"
+            android:exported="true" />
+
+    </application>
+
+
+</manifest>
+
+1stacitivity
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"/>
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Data"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
+package com.example.journal_q1;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etName;
+    Button btnSend;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etName = findViewById(R.id.etName);
+        btnSend = findViewById(R.id.btnSend);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = etName.getText().toString();
+
+                // Create explicit intent
+                Intent intent = new Intent(MainActivity.this, Second_main.class);
+
+                // Pass data
+                intent.putExtra("user_name", name);
+
+                // Start second activity
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+
+SecondActivity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"/>
+</LinearLayout>
+package com.example.journal_q1;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Second_main extends AppCompatActivity {
+
+    TextView tvDisplay;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.second_main); // make sure this layout exists
+
+        tvDisplay = findViewById(R.id.tvDisplay); // make sure this ID exists in the layout
+
+        // Get data from intent
+        String name = getIntent().getStringExtra("user_name");
+
+        // Safely handle null
+        if (name == null) name = "Guest";
+
+        // Display data
+        tvDisplay.setText("Hello, " + name + "!");
+    }
+}
