@@ -1,0 +1,61 @@
+Q11) Create a local database using SQLiteOpenHelper and a table named students with fields (id, name, email). And display the 5 records.
+
+activity_main.xml:
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"
+android:padding="16dp">
+
+<TextView android:id="@+id/tvRecords" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" />
+
+</ScrollView>
+
+MainActivity.java:
+
+MainActivity.java:
+
+package com.example.myapplication;
+import androidx.appcompat.app.AppCompatActivity; import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase; import android.graphics.Typeface;
+import android.os.Bundle; import android.view.Gravity; import android.view.ViewGroup;
+import android.widget.LinearLayout; import android.widget.ScrollView; import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity { SQLiteDatabase db;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);
+
+// 1. Create ScrollView
+        ScrollView scrollView = new ScrollView(this); LinearLayout mainLayout = new LinearLayout(this); mainLayout.setOrientation(LinearLayout.VERTICAL); mainLayout.setPadding(20, 20, 20, 20); scrollView.addView(mainLayout); setContentView(scrollView);
+
+// 2. Open or create database
+        db = openOrCreateDatabase("College", MODE_PRIVATE, null);
+
+// 3. Create students table
+        db.execSQL("CREATE TABLE IF NOT EXISTS students (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT, " + "email TEXT)");
+// 4. Insert 5 records (only if empty)
+        Cursor check = db.rawQuery("SELECT COUNT(*) FROM students", null); check.moveToFirst();
+        if (check.getInt(0) == 0) {
+            db.execSQL("INSERT INTO students (name,email) VALUES ('Sneha','sneha@example.com')"); db.execSQL("INSERT INTO students (name,email) VALUES ('Akshata','akshata@example.com')"); db.execSQL("INSERT INTO students (name,email) VALUES ('Mosin','mosin@example.com')"); db.execSQL("INSERT INTO students (name,email) VALUES ('Rahul','rahul@example.com')"); db.execSQL("INSERT INTO students (name,email) VALUES
+            ('Hrushikesh','hrsuhikesh@example.com')");
+        }
+        check.close();
+
+// 5. Retrieve and display records dynamically
+        Cursor cursor = db.rawQuery("SELECT * FROM students LIMIT 5", null); if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name")); String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
+
+// Create TextView dynamically TextView tv = new TextView(this);
+                tv.setText("ID: " + id + "\nName: " + name + "\nEmail: " + email); tv.setTextSize(18f);
+                tv.setTypeface(Typeface.MONOSPACE); tv.setPadding(10, 20, 10, 20); tv.setGravity(Gravity.START);
+
+// Add to layout
+                mainLayout.addView(tv, new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+    }
+}
