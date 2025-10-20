@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF8E1"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🍎 Fruit Gallery 🍊"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#E65100"
+        android:gravity="center"
+        android:paddingBottom="12dp"
+        android:shadowColor="#BDBDBD"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2" />
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="2"
+        android:horizontalSpacing="16dp"
+        android:verticalSpacing="16dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:padding="8dp" />
+</LinearLayout>
+
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.graphics.Color;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    GridView gridView;
+
+    int[] fruitImages = {
+            R.drawable.apple,
+            R.drawable.graps,
+            R.drawable.mango,
+            R.drawable.orange,
+            R.drawable.guava
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Create parent layout
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setBackgroundColor(Color.parseColor("#FFF8E1"));
+        layout.setPadding(16, 16, 16, 16);
+
+        // Add title
+        TextView title = new TextView(this);
+        title.setText("🍎 Fruit Gallery 🍊");
+        title.setTextSize(24);
+        title.setTextColor(Color.parseColor("#E65100"));
+        title.setPadding(0, 0, 0, 20);
+        title.setGravity(android.view.Gravity.CENTER);
+        layout.addView(title);
+
+        // Create GridView
+        gridView = new GridView(this);
+        gridView.setNumColumns(2);
+        gridView.setVerticalSpacing(25);
+        gridView.setHorizontalSpacing(25);
+        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+        gridView.setBackgroundColor(Color.WHITE);
+        gridView.setPadding(16, 16, 16, 16);
+
+        // Adapter inside same file
+        gridView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return fruitImages.length;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return fruitImages[position];
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                ImageView imageView;
+                if (convertView == null) {
+                    imageView = new ImageView(MainActivity.this);
+                    imageView.setLayoutParams(new ViewGroup.LayoutParams(350, 350));
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    imageView.setPadding(8, 8, 8, 8);
+                } else {
+                    imageView = (ImageView) convertView;
+                }
+                imageView.setImageResource(fruitImages[position]);
+                return imageView;
+            }
+        });
+
+        // Add GridView to layout
+        layout.addView(gridView);
+
+        // Display everything
+        setContentView(layout);
+    }
+}
